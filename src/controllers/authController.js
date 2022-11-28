@@ -1,5 +1,13 @@
 import bcrypt from "bcrypt";
 import authService from "../service/authService";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
+const key = process.env.KEYACCESS;
+const refreshKey = process.env.REFRESHKEY;
+const tokenTime = process.env.TOKENTIME;
+const refreshTokenTime = process.env.REFRESHTOKENTIME;
 
 const authController = {
   // register
@@ -27,10 +35,6 @@ const authController = {
             successfully: 1,
           });
         }
-        res.status(500).json({
-          massage: "error system",
-          error: 1,
-        });
       }
       res.status(500).json({
         message: "Account already exists",
@@ -53,18 +57,96 @@ const authController = {
       }
 
       const validPassword = await bcrypt.compare(user.password, data.password);
-      console.log(validPassword);
       if (!validPassword) {
         res.status(404).json({ massage: "Wrong password", error: 1 });
       }
-      res.status(200).json({
-        message: "Login succesfully",
-        error: 0,
-        user: data,
-      });
+      // /jwt
+      if (user && validPassword) {
+        let accessToken = authController.generateAccessToken(data);
+        let refreshToken = authController.generateRefreshToken(data);
+        let { password, ...rest } = data._doc;
+        // save refreshtoken vao cookies
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: false,
+          path: "/",
+          sameSite: "strict",
+        });
+        res.status(200).json({
+          message: "Login succesfully",
+          error: 0,
+          data: rest,
+          accessToken: accessToken,
+        });
+      }
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json({
+        message: "error",
+        error: error,
+      });
     }
+  },
+  // generate accesstoken
+  generateAccessToken: (data) => {
+    return jwt.sign(
+      {
+        id: data.id,
+        role: data.role,
+        name: data.username,
+      },
+      key,
+      { expiresIn: tokenTime }
+    );
+  },
+  // generate refresh token
+  generateRefreshToken: (data) => {
+    return jwt.sign(
+      {
+        id: data.id,
+        role: data.role,
+        name: data.username,
+      },
+      refreshKey,
+      { expiresIn: refreshTokenTime }
+    );
+  },
+  requestRefreshToken: async (req, res) => {
+    // lay refresh token tu cookie
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      res.status(401).json({
+        message: "You're not authenticated",
+        error: 1,
+      });
+    }
+    jwt.verify(refreshToken, refreshKey, (err, user) => {
+      if (err) {
+        res.status(404).json({
+          message: "Error",
+          error: 1,
+        });
+      }
+      let newAccessToken = authController.generateAccessToken(user);
+      let newRefreshToken = authController.generateRefreshToken(user);
+      res.cookie("newRefreshToken", newRefreshToken, {
+        httpOnly: true,
+        secure: false,
+        path: "/",
+        sameSite: "strict",
+      });
+      res.status(200).json({
+        message: "New Access Token",
+        newAccessToken: newAccessToken,
+      });
+    });
+  },
+  // logout
+  logoutUser: async (req, res) => {
+    res.clearCookie("refreshToken");
+    res.status(200).json({
+      message: "Logout Success!",
+      error: 0,
+    });
   },
 };
 

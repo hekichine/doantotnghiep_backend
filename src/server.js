@@ -4,12 +4,12 @@ import cookieParser from "cookie-parser";
 import bp from "body-parser";
 import connectDB from "./connectDB/connectDb";
 import initAuthRoute from "./route/authRoute";
+import initUserRoute from "./route/userRoute";
 
 require("dotenv").config();
 
 const app = express();
 const port = process.env.HOST || 8080;
-console.log(process.env.HOST);
 
 connectDB();
 
@@ -21,6 +21,7 @@ app.use(bp.urlencoded({ extended: true }));
 
 // route
 initAuthRoute(app);
+initUserRoute(app);
 
 app.listen(port, () => {
   console.log(`server is running on http://localhost:${port}`);
