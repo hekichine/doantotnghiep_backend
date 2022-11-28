@@ -6,7 +6,7 @@ const userController = {
     try {
       let data = await userService.getAll();
       if (data) {
-        res.status(200).json({
+        return res.status(200).json({
           massage: "all user",
           data: data,
         });
@@ -24,7 +24,7 @@ const userController = {
       let data = await userService.deleteUser(id);
       console.log(data);
       if (data) {
-        res.status(200).json({
+        return res.status(200).json({
           massage: "Delete successfully",
           error: 0,
           success: 1,

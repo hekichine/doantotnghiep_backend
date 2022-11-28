@@ -29,7 +29,7 @@ const authController = {
       if (!findAccount) {
         let addUser = await authService.createUser(newUser);
         if (addUser) {
-          res.status(200).json({
+          return res.status(200).json({
             message: "Create user successfully",
             error: 0,
             successfully: 1,
@@ -50,15 +50,17 @@ const authController = {
       let user = req.body;
       let data = await authService.findUser(user.username);
       if (!data) {
-        res.status(404).json({
+        return res.status(404).json({
           message: "Wrong username",
           error: 1,
         });
       }
-
       const validPassword = await bcrypt.compare(user.password, data.password);
       if (!validPassword) {
-        res.status(404).json({ massage: "Wrong password", error: 1 });
+        return res.status(404).json({
+          massage: "Wrong password",
+          error: 1,
+        });
       }
       // /jwt
       if (user && validPassword) {
@@ -114,14 +116,14 @@ const authController = {
     // lay refresh token tu cookie
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
-      res.status(401).json({
+      return res.status(401).json({
         message: "You're not authenticated",
         error: 1,
       });
     }
     jwt.verify(refreshToken, refreshKey, (err, user) => {
       if (err) {
-        res.status(404).json({
+        return res.status(404).json({
           message: "Error",
           error: 1,
         });
