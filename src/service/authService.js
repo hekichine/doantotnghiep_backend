@@ -4,11 +4,12 @@ let authService = {
   findUser: (name) => {
     return new Promise(async (resolve, reject) => {
       try {
-        let data = await User.findOne({ username: name }).exec();
+        let data = await User.findOne({ username: name });
 
         if (data) {
           resolve(data);
         }
+        resolve();
       } catch (error) {
         reject(error);
       }

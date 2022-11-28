@@ -12,12 +12,12 @@ const authController = {
 
       //   create new user
       const newUser = {
-        username: user.name,
+        username: user.username,
         email: user.email,
         password: hashed,
       };
       //save to db
-      let findAccount = await authService.findUser(user.name);
+      let findAccount = await authService.findUser(user.username);
       if (!findAccount) {
         let addUser = await authService.createUser(newUser);
         if (addUser) {
@@ -44,8 +44,7 @@ const authController = {
   loginUser: async (req, res) => {
     try {
       let user = req.body;
-      let data = await authService.findUser(user.name);
-
+      let data = await authService.findUser(user.username);
       if (!data) {
         res.status(404).json({
           message: "Wrong username",
