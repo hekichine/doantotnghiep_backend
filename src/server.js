@@ -22,6 +22,7 @@ app.use(bp.urlencoded({ extended: true }));
 // route
 initAuthRoute(app);
 initUserRoute(app);
+initHomeRoute(app);
 
 app.listen(port, () => {
   console.log(`server is running on http://localhost:${port}`);
