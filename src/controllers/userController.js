@@ -9,6 +9,7 @@ const userController = {
         return res.status(200).json({
           massage: "all user",
           data: data,
+          error: 0,
         });
       }
     } catch (error) {
