@@ -25,6 +25,23 @@ initAuthRoute(app);
 initUserRoute(app);
 initHomeRoute(app);
 
+// enable cor
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", process.env.REACT_URL);
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    " X-Requested-With, Content-Type"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  next();
+});
+
 app.listen(port, () => {
   console.log(`server is running on http://localhost:${port}`);
 });
