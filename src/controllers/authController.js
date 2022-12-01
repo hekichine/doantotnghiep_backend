@@ -36,7 +36,7 @@ const authController = {
           });
         }
       }
-      res.status(500).json({
+      res.status(200).json({
         message: "Account already exists",
         error: 1,
         errorcode: 1,
@@ -50,15 +50,15 @@ const authController = {
       let user = req.body;
       let data = await authService.findUser(user.username);
       if (!data) {
-        return res.status(404).json({
+        return res.status(200).json({
           message: "Wrong username",
           error: 1,
         });
       }
       const validPassword = await bcrypt.compare(user.password, data.password);
       if (!validPassword) {
-        return res.status(404).json({
-          massage: "Wrong password",
+        return res.status(200).json({
+          message: "Wrong password",
           error: 1,
         });
       }
@@ -116,7 +116,7 @@ const authController = {
     // lay refresh token tu cookie
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
-      return res.status(401).json({
+      return res.status(200).json({
         message: "You're not authenticated",
         error: 1,
       });

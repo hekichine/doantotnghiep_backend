@@ -5,6 +5,7 @@ import bp from "body-parser";
 import connectDB from "./connectDB/connectDb";
 import initAuthRoute from "./route/authRoute";
 import initUserRoute from "./route/userRoute";
+import initHomeRoute from "./route/homeRoute";
 
 require("dotenv").config();
 
