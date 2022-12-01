@@ -15,7 +15,6 @@ const port = process.env.HOST || 8080;
 connectDB();
 
 // install
-
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
