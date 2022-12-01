@@ -5,7 +5,7 @@ const router = express.Router();
 const initHomeRoute = (app) => {
   router.get("/", (req, res) => {
     res.json({
-      message: "Home server backend book store",
+      message: "Home server backend Minh Sang book store",
     });
   });
 
