@@ -8,7 +8,7 @@ const userController = {
       if (data) {
         return res.status(200).json({
           massage: "all user",
-          info: data,
+          payload: data,
           error: 0,
         });
       }

@@ -77,7 +77,7 @@ const authController = {
         res.status(200).json({
           message: "Login succesfully",
           error: 0,
-          info: rest,
+          payload: rest,
           accessToken: accessToken,
         });
       }
