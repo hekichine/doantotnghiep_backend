@@ -25,7 +25,7 @@ const initAuthRoute = (app) => {
     authController.logoutUser
   );
 
-  app.use("/auth", router);
+  app.use("/api/auth", router);
 };
 
 export default initAuthRoute;

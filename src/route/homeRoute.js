@@ -9,7 +9,7 @@ const initHomeRoute = (app) => {
     });
   });
 
-  app.use("/", router);
+  app.use("/api", router);
 };
 
 export default initHomeRoute;

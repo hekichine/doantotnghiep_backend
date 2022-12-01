@@ -7,7 +7,7 @@ const router = express.Router();
 const initUserRoute = (app) => {
   //   get all user
   router.get("/", middleWareController.verifyToken, userController.getAllUser);
-  router.get("/getusernotoken", userController.getAllUser);
+  router.get("/getall", userController.getAllUser);
   //   delete
   router.delete(
     "/delete/:id",
@@ -15,7 +15,7 @@ const initUserRoute = (app) => {
     userController.deleteUser
   );
 
-  app.use("/user", router);
+  app.use("/api/user", router);
 };
 
 export default initUserRoute;
